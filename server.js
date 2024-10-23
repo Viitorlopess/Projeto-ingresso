@@ -60,6 +60,8 @@ db.serialize(() => {
         preco REAL,
         imagem_url TEXT,
         data TEXT,
+        hora TEXT,
+        local TEXT,
         fornecedor_id INTEGER
     )`);
 
@@ -130,16 +132,14 @@ app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
     }
 
     const fornecedorId = req.session.user.id;
-    const { nome, descricao, data, quantidade_ingressos, tipo_ingresso, preco, imagem_url } = req.body;
+    const { nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url } = req.body;
     
-
     if (nome === "" || !validarNome(nome)) {
         return res.status(400).json({ error: 'Insira o nome completo, o nome deve conter apenas letras.' });
     }
 
-
-    const sql = `INSERT INTO eventos (nome, descricao, data, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [nome, descricao, data, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedorId];
+    const sql = `INSERT INTO eventos (nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    const params = [nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedorId];
 
     db.run(sql, params, function (err) {
         if (err) {

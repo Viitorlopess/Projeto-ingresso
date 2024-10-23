@@ -8,7 +8,7 @@ body {
 
 /* Cabeçalho da página */   
 header {
-    background-color: #007bff;
+    background-color: #075db9;
     color: white;
     padding: 10px;
     text-align: center;
@@ -26,6 +26,7 @@ header {
     max-width: 600px; /* Define a largura máxima do formulário */
     width: 100%; /* Faz o formulário ocupar 100% da largura disponível */
     padding: 20px;
+    margin-top: 10%;
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

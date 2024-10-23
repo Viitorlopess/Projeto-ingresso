@@ -1,33 +1,28 @@
-// No seu JavaScript (cadastro.js)
-document.getElementById('cadastroeventoform').addEventListener('submit', function(event) {
-    event.preventDefault(); // Evitar o envio padrão do formulário
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#form_evento');
 
-    const formData = new FormData(this);
-    const data = {};
-    formData.forEach((value, key) => {
-        data[key] = value;
-
-    });
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Evita o envio padrão do formulário
+        const formData = new FormData(form);
 
         fetch('/api/cadastrar_evento', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
+            body: formData // Enviando como FormData
         })
-        .then(response => response.json())
-        .then(result => {            
-            if (result.redirect) {
-                window.location.href = result.redirect;
-            } else {
-                alert(result.error || 'Erro desconhecido.'); // Mostrar erro se ocorrer
-                window.location.href = '/dashboard-fornecedor.html'; // Redireciona 
+        .then(response => {
+            // Verifica se a resposta é um erro
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.error); });
             }
+            return response.json();
+        })
+        .then(data => {
+            alert(data.message); // Mostra a mensagem de sucesso
+            window.location.href = '/dashboard-fornecedor.html'; // Redireciona
         })
         .catch(error => {
+            alert('Erro: ' + error.message); // Mostra o erro em um alerta
             console.error('Erro:', error);
-            alert('Erro ao cadastrar. Tente novamente mais tarde.');
         });
     });
-
+});

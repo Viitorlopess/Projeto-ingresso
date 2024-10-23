@@ -164,12 +164,15 @@
                     const eventName = document.createElement('h3');
                     eventName.textContent = event.nome || 'Nome não disponível';
 
-                    const eventDescription = document.createElement('p');
-                    eventDescription.textContent = event.descricao || 'Descrição não disponível';
+                    /*const eventDescription = document.createElement('p'); 
+                    eventDescription.textContent = event.descricao || 'Descrição não disponível';*/
 
                     const eventDate = document.createElement('p');
                     const date = event.data ? new Date(event.data).toLocaleDateString() : 'Data não disponível';
                     eventDate.textContent = `Data: ${date}`;
+
+                    /*const eventTime = document.createElement('p');
+                    eventTime.textContent = `Hora: ${event.hora || 'Hora não disponível'}`;*/
 
                     const eventButton = document.createElement('button');
                     eventButton.textContent = 'Saber Mais';
@@ -178,12 +181,12 @@
                     });
 
                     eventDetails.appendChild(eventName);
-                    eventDetails.appendChild(eventDescription);
+                    //eventDetails.appendChild(eventDescription);
                     eventDetails.appendChild(eventDate);
+                    //eventDetails.appendChild(eventTime);
                     eventItem.appendChild(eventImage);
                     eventItem.appendChild(eventDetails);
                     eventItem.appendChild(eventButton);
-
                     eventList.appendChild(eventItem);
                 });
             }

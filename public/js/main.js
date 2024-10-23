@@ -37,7 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const eventDate = document.createElement('p');
             const date = event.data ? new Date(event.data).toLocaleDateString('pt-BR') : 'Data não disponível';
             eventDate.textContent = `Data: ${date}`;
-
+            
+            const eventTime = document.createElement('p');
+            eventTime.textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
+            
             const eventButton = document.createElement('a');
             eventButton.href = `compra.html?id=${event.id}`; // Link para a página de compra
             eventButton.innerHTML = '<button>Saber Mais</button>'; // Botão para saber mais

@@ -24,11 +24,11 @@ function updateSchema() {
         });*/
 
         db.serialize(() => {
-            db.run(`ALTER TABLE usuarios DROP COLUMN sobrenome`, (err) => {
+            db.run(`ALTER TABLE eventos ADD COLUMN local TEXT `, (err) => {
             if (err) {
-                console.error('Erro ao adicionar a coluna sobrenome:', err.message);
+                console.error('Erro ao adicionar a coluna local_evento:', err.message);
             } else {
-                console.log('Coluna sobrenome adicionada com sucesso.');
+                console.log('Coluna local_evento adicionada com sucesso.');
             }
         });
     });

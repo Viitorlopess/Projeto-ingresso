@@ -13,7 +13,7 @@
         <h1>Cadastrar Evento</h1>
     </header>
         <div class="form-container">
-            <form id="cadastroeventoform" action="/api/cadastrar_evento" method="POST" autocomplete="on">
+            <form id="form_evento" action="/api/cadastrar_evento" method="POST" autocomplete="on">
 
                 <!-- Campos do formulário -->
                 <label for="nome">Nome:</label>
@@ -24,6 +24,12 @@
 
                 <label for="data">Data:</label>
                 <input type="date" id="data" name="data" required>
+
+                <label for="hora">Hora do Evento:</label>
+                <input type="time" id="hora" name="hora" required>
+
+                <label for="local">Local do Evento:</label>
+                <input type="text" id="local" name="local" required>
 
                 <label for="quantidade_ingressos">Quantidade de Ingressos:</label>
                 <input type="number" id="quantidade_ingressos" name="quantidade_ingressos" required>
@@ -40,7 +46,7 @@
                 <button type="submit">Cadastrar Evento</button>
             </form>
         </div>
-        <script src="/js/cadastro.js"></script> <!-- Corrija o caminho -->
+        <script src="../public/js/cadastro.js"></script> <!-- Corrija o caminho -->
 
 </body>
 
