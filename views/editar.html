@@ -7,35 +7,51 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
-            padding: 20px;
         }
 
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Centralização e estilo do formulário */
         .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
+            display: flex; /* Usando flexbox para alinhamento */
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            height: 100vh; /* Altura completa da tela */
+        }
+
+        .container form {
+            max-width: 600px; /* Define a largura máxima do formulário */
+            width: 100%; /* Faz o formulário ocupar 100% da largura disponível */
             padding: 20px;
+            margin-top: 40%;
+            background-color: white;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            text-align: center;
-        }
-
-        input, textarea, button {
+        /* Estilo dos inputs, selects e botões */
+        input, select, button, textarea {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border-radius: 4px;
             border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
+        /* Estilo do botão de envio */
         button {
             background-color: #007bff;
             color: white;
-            border: none;
+            font-weight: bold;
             cursor: pointer;
         }
 
@@ -56,8 +72,8 @@
             <label for="event-description">Descrição:</label>
             <textarea id="event-description" required></textarea>
 
-            <label for="event-data">Data:</label>
-            <input type="date" id="event-data" required>
+            <label for="event-date">Data:</label>
+            <input type="date" id="event-date" required>
 
             <label for="event-time">Hora:</label>
             <input type="time" id="event-time" required>
@@ -65,19 +81,36 @@
             <label for="event-local">Local:</label>
             <input type="text" id="event-local" required>
 
-            <label for="Quantidade-ingresso">Quantidade de ingresso:</label>
-            <input type="number" id="Quantidade-ingresso" required>
+            <h3>Ingressos</h3>
 
-            <label for="tipo-ingresso">Tipo de ingresso:</label>
-            <input type="text" id="tipo-ingresso" required>
-            
-            <label for="event-price">Preço:</label>
-            <input type="number" id="event-price" required>
+            <label for="quantidade-inteira">Quantidade - inteira:</label>
+            <input type="number" id="quantidade-inteira" required>
+
+            <label for="preco-inteira">Preço - Inteira:</label>
+            <input type="number" step="0.01" id="preco-inteira" name="preco-inteira" required>
+
+            <label for="quantidade-meia">Quantidade - Meia:</label>
+            <input type="number" id="quantidade-meia" name="quantidade-meia" required>
+
+            <label for="preco-meia">Preço - Meia:</label>
+            <input type="number" step="0.01" id="preco-meia" name="preco-meia" required>
+
+            <label for="quantidade-vip">Quantidade - VIP:</label>
+            <input type="number" id="quantidade-vip" name="quantidade-vip" required>
+
+            <label for="preco-vip">Preço - VIP:</label>
+            <input type="number" step="0.01" id="preco-vip" name="preco-vip" required>
+
+            <label for="quantidade-pcd-idoso">Quantidade - PCD/Idoso:</label>
+            <input type="number" id="quantidade-pcd-idoso" name="quantidade-pcd-idoso" required>
+
+            <label for="preco-pcd-idoso">Preço - PCD/Idoso:</label>
+            <input type="number" step="0.01" id="preco-pcd-idoso" name="preco-pcd-idoso" required>
 
             <label for="event-image">URL da imagem:</label>
             <input type="url" id="event-image" required>
 
-            <button type="submit">Salvar Alterações:</button>
+            <button type="submit">Salvar Alterações</button>
         </form>
     </div>
 
@@ -93,7 +126,17 @@
                         const event = data.data;
                         document.getElementById('event-name').value = event.nome;
                         document.getElementById('event-description').value = event.descricao;
-                        document.getElementById('event-price').value = event.preco;
+                        document.getElementById('event-date').value = event.data;
+                        document.getElementById('event-time').value = event.hora;
+                        document.getElementById('event-local').value = event.local;
+                        document.getElementById('quantidade-inteira').value = event.quantidade_inteira;
+                        document.getElementById('preco-inteira').value = event.preco_inteira;
+                        document.getElementById('quantidade-meia').value = event.quantidade_meia;
+                        document.getElementById('preco-meia').value = event.preco_meia;
+                        document.getElementById('quantidade-vip').value = event.quantidade_vip;
+                        document.getElementById('preco-vip').value = event.preco_vip;
+                        document.getElementById('quantidade-pcd-idoso').value = event.quantidade_pcd_idoso;
+                        document.getElementById('preco-pcd-idoso').value = event.preco_pcd_idoso;
                         document.getElementById('event-image').value = event.imagem_url;
                     } else {
                         alert('Erro ao carregar os dados do evento.');
@@ -108,28 +151,44 @@
                 const updatedEvent = {
                     nome: document.getElementById('event-name').value,
                     descricao: document.getElementById('event-description').value,
-                    preco: document.getElementById('event-price').value,
+                    data: document.getElementById('event-date').value,
+                    hora: document.getElementById('event-time').value,
+                    local: document.getElementById('event-local').value,
+                    quantidade_inteira: document.getElementById('quantidade-inteira').value,
+                    preco_inteira: document.getElementById('preco-inteira').value,
+                    quantidade_meia: document.getElementById('quantidade-meia').value,
+                    preco_meia: document.getElementById('preco-meia').value,
+                    quantidade_vip: document.getElementById('quantidade-vip').value,
+                    preco_vip: document.getElementById('preco-vip').value,
+                    quantidade_pcd_idoso: document.getElementById('quantidade-pcd-idoso').value,
+                    preco_pcd_idoso: document.getElementById('preco-pcd-idoso').value,
                     imagem_url: document.getElementById('event-image').value
                 };
 
                 fetch(`/api/eventos/${eventId}`, {
-                    method: 'PUT', // Método para atualizar o evento
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(updatedEvent)
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedEvent)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.message === 'Evento atualizado com sucesso!') {
                         alert('Evento atualizado com sucesso!');
-                        window.location.href = 'dashboard-fornecedor.html'; // Redireciona de volta para a lista de eventos
+                        window.location.href = 'dashboard-fornecedor.html';
                     } else {
                         alert('Erro ao atualizar o evento.');
                     }
                 })
                 .catch(error => {
                     console.error('Erro ao atualizar evento:', error);
+                    alert('Erro ao atualizar o evento. Verifique o console para mais detalhes.');
                 });
             });
         });

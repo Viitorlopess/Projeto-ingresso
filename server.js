@@ -468,22 +468,53 @@ app.get('/api/verificar-autenticacao', (req, res) => {
     }
 });
 
-// Endpoint para editar um evento
 app.put('/api/eventos/:id', (req, res) => {
-    const eventId = parseInt(req.params.id);
-    const eventIndex = eventos.findIndex(event => event.id === eventId);
+    const eventId = req.params.id;
+    const {
+        nome,
+        descricao,
+        data,
+        hora,
+        local,
+        quantidade_inteira,
+        preco_inteira,
+        quantidade_meia,
+        preco_meia,
+        quantidade_vip,
+        preco_vip,
+        quantidade_pcd_idoso,
+        preco_pcd_idoso,
+        imagem_url
+    } = req.body;
 
-    if (eventIndex !== -1) {
-        // Atualizando o evento com os dados recebidos
-        eventos[eventIndex] = {
-            id: eventId,
-            nome: req.body.nome,
-            descricao: req.body.descricao,
-            preco: req.body.preco,
-            imagem_url: req.body.imagem_url
-        };
-        return res.json({ message: 'Evento atualizado com sucesso!', data: eventos[eventIndex] });
-    } else {
-        return res.status(404).json({ message: 'Evento não encontrado.' });
-    }
+    // SQL para atualizar o evento no banco de dados
+    const sql = `UPDATE eventos 
+                SET nome = ?, descricao = ?, data = ?, hora = ?, local = ?, 
+                    quantidade_inteira = ?, preco_inteira = ?, 
+                    quantidade_meia = ?, preco_meia = ?, 
+                    quantidade_vip = ?, preco_vip = ?, 
+                    quantidade_pcd_idoso = ?, preco_pcd_idoso = ?, 
+                    imagem_url = ? 
+                WHERE id = ?`;
+
+    const params = [
+        nome, descricao, data, hora, local, 
+        quantidade_inteira, preco_inteira, 
+        quantidade_meia, preco_meia, 
+        quantidade_vip, preco_vip, 
+        quantidade_pcd_idoso, preco_pcd_idoso, 
+        imagem_url, eventId
+    ];
+
+    db.run(sql, params, function (err) {
+        if (err) {
+            console.error('Erro ao atualizar evento:', err.message);
+            return res.status(500).json({ message: 'Erro interno no servidor', error: err.message });
+        }
+        if (this.changes === 0) {
+            return res.status(404).json({ message: 'Evento não encontrado' });
+        }
+        res.json({ message: 'Evento atualizado com sucesso!' });
+    });
 });
+
