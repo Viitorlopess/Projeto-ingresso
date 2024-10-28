@@ -81,6 +81,9 @@
             <label for="event-local">Local:</label>
             <input type="text" id="event-local" required>
 
+            <label for="event-genero">Gênero do Evento:</label>
+            <input type="text" id="event-genero" required>
+
             <h3>Ingressos</h3>
 
             <label for="quantidade-inteira">Quantidade - inteira:</label>
@@ -129,6 +132,7 @@
                         document.getElementById('event-date').value = event.data;
                         document.getElementById('event-time').value = event.hora;
                         document.getElementById('event-local').value = event.local;
+                        document.getElementById('event-genero').value = event.genero;
                         document.getElementById('quantidade-inteira').value = event.quantidade_inteira;
                         document.getElementById('preco-inteira').value = event.preco_inteira;
                         document.getElementById('quantidade-meia').value = event.quantidade_meia;
@@ -154,6 +158,7 @@
                     data: document.getElementById('event-date').value,
                     hora: document.getElementById('event-time').value,
                     local: document.getElementById('event-local').value,
+                    genero: document.getElementById('event-genero').value,
                     quantidade_inteira: document.getElementById('quantidade-inteira').value,
                     preco_inteira: document.getElementById('preco-inteira').value,
                     quantidade_meia: document.getElementById('quantidade-meia').value,

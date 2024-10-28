@@ -55,22 +55,23 @@
 </style>
 </head>
 <body>
-<div class="container">
-    <img id="event-image" class="event-image" src="default-image.png" alt="Imagem do Evento">
-    <div class="event-details">
-        <h1 id="event-name">Nome do Evento</h1>
-        <p id="event-description">Descrição do evento</p>
-        <p id="event-date">Data: </p>
-        <p id="event-time">Hora: </p>
-        <p id="event-local">Local: </p>
+    <div class="container">
+        <img id="event-image" class="event-image" src="default-image.png" alt="Imagem do Evento">
+        <div class="event-details">
+            <h1 id="event-name">Nome do Evento</h1>
+            <p id="event-description">Descrição do evento</p>
+            <p id="event-date">Data: </p>
+            <p id="event-time">Hora: </p>
+            <p id="event-local">Local: </p>
+            <p id="event-genero">Gênero: </p>
+        </div>
+        <div class="buy-tickets">
+            <h3>Comprar Ingressos</h3>
+            <div id="ticket-types"></div>
+            <div class="total" id="total">Total: R$ 0.00</div>
+            <button id="buy-btn">Comprar</button>
+        </div>
     </div>
-    <div class="buy-tickets">
-        <h3>Comprar Ingressos</h3>
-        <div id="ticket-types"></div>
-        <div class="total" id="total">Total: R$ 0.00</div>
-        <button id="buy-btn">Comprar</button>
-    </div>
-</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -81,18 +82,19 @@
         // Carregar os detalhes do evento
         loadEventDetails();
 
-        function loadEventDetails() {
-            fetch(`/api/eventos/${eventId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message === 'Sucesso') {
-                        const event = data.data;
-                        document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
-                        document.getElementById('event-name').textContent = event.nome;
-                        document.getElementById('event-description').textContent = event.descricao;
-                        document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
-                        document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
-                        document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
+          function loadEventDetails() {
+              fetch(`/api/eventos/${eventId}`)
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.message === 'Sucesso') {
+                          const event = data.data;
+                          document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
+                          document.getElementById('event-name').textContent = event.nome;
+                          document.getElementById('event-description').textContent = event.descricao;
+                          document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
+                          document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
+                          document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
+                          document.getElementById('event-genero').textContent = `Gênero: ${event.genero || 'Gênero não disponível'}`;
 
 
                         // Adiciona os tipos de ingressos

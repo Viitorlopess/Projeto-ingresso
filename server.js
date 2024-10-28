@@ -62,7 +62,8 @@ db.serialize(() => {
         data TEXT,
         hora TEXT,
         local TEXT,
-        fornecedor_id INTEGER
+        fornecedor_id INTEGER,
+        genero TEXT
     )`);
 
     // Tabela de usuários
@@ -153,6 +154,7 @@ app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
         data,
         hora,
         local,
+        genero,
         quantidade_inteira,
         preco_inteira,
         quantidade_meia,
@@ -168,12 +170,12 @@ app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
     const fornecedor_id = req.session.user.id;
 
     // SQL para inserir dados no banco
-    const sql = `INSERT INTO eventos (nome, descricao, data, hora, local, 
+    const sql = `INSERT INTO eventos (nome, descricao, data, hora, local, genero, 
         quantidade_inteira, preco_inteira, 
         quantidade_meia, preco_meia, 
         quantidade_vip, preco_vip, 
         quantidade_pcd_idoso, preco_pcd_idoso, 
-        imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const params = [
         nome,
@@ -181,6 +183,7 @@ app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
         data,
         hora,
         local,
+        genero,
         quantidade_inteira,
         preco_inteira,
         quantidade_meia,
@@ -492,6 +495,7 @@ app.put('/api/eventos/:id', (req, res) => {
         data,
         hora,
         local,
+        genero,
         quantidade_inteira,
         preco_inteira,
         quantidade_meia,
@@ -505,7 +509,7 @@ app.put('/api/eventos/:id', (req, res) => {
 
     // SQL para atualizar o evento no banco de dados
     const sql = `UPDATE eventos 
-                SET nome = ?, descricao = ?, data = ?, hora = ?, local = ?, 
+                SET nome = ?, descricao = ?, data = ?, hora = ?, local = ?, genero = ?,
                     quantidade_inteira = ?, preco_inteira = ?, 
                     quantidade_meia = ?, preco_meia = ?, 
                     quantidade_vip = ?, preco_vip = ?, 
@@ -514,7 +518,7 @@ app.put('/api/eventos/:id', (req, res) => {
                 WHERE id = ?`;
 
     const params = [
-        nome, descricao, data, hora, local, 
+        nome, descricao, data, hora, local, genero,
         quantidade_inteira, preco_inteira, 
         quantidade_meia, preco_meia, 
         quantidade_vip, preco_vip, 
