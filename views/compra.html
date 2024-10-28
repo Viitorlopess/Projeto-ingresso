@@ -28,9 +28,12 @@
         .buy-tickets {
             margin-top: 20px;
         }
-        .buy-tickets input {
-            width: 50px;
-            padding: 5px;
+        .buy-tickets label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .buy-tickets select {
+            margin-right: 10px;
         }
         .buy-tickets button {
             padding: 10px 20px;
@@ -39,9 +42,15 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 20px;
         }
         .buy-tickets button:hover {
             background-color: #0056b3;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -51,95 +60,137 @@
         <div class="event-details">
             <h1 id="event-name">Nome do Evento</h1>
             <p id="event-description">Descrição do evento</p>
-            <p id="event-price">Preço: R$ 0,00</p>
             <p id="event-date">Data: </p>
             <p id="event-time">Hora: </p>
             <p id="event-local">Local: </p>
-
         </div>
         <div class="buy-tickets">
             <h3>Comprar Ingressos</h3>
-            <label for="quantity">Quantidade:</label>
-            <input type="number" id="quantity" value="1" min="1">
+            <div id="ticket-types"></div>
+            <div class="total" id="total">Total: R$ 0.00</div>
             <button id="buy-btn">Comprar</button>
         </div>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-    // Obtém o ID do evento da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const eventId = urlParams.get('id');
+      document.addEventListener('DOMContentLoaded', () => {
+          // Obtém o ID do evento da URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const eventId = urlParams.get('id');
 
-    // Carregar os detalhes do evento
-    loadEventDetails();
+          // Carregar os detalhes do evento
+          loadEventDetails();
 
-    function loadEventDetails() {
-        fetch(`/api/eventos/${eventId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Sucesso') {
-                    const event = data.data;
-                    document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
-                    document.getElementById('event-name').textContent = event.nome;
-                    document.getElementById('event-description').textContent = event.descricao;
-                    document.getElementById('event-price').textContent = `Preço: R$ ${event.preco}`;
-                    document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
-                    document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
-                    document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
-                } else {
-                    console.error('Erro ao carregar evento:', data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao carregar evento:', error);
-            });
-    }
-
-    // Comprar Ingressos
-    document.getElementById('buy-btn').addEventListener('click', () => {
-        // Verifica se o usuário está autenticado somente ao clicar no botão de compra
-        fetch('/api/verificar-autenticacao')
-            .then(response => response.json())
-            .then(data => {
-                if (!data.autenticado) {
-                    alert('Você precisa estar logado para comprar ingressos. Por favor, cadastre-se ou faça login.');
-                    window.location.href = '/login'; // Redireciona para a página de login
-                } else {
-                    // Se autenticado, procede com a compra
-                    const quantity = document.getElementById('quantity').value;
-                    if (quantity <= 0) {
-                        alert('Quantidade inválida');
-                        return;
-                    }
-
-                    fetch(`/api/comprar`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            eventId: eventId,
-                            quantidade: quantity
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message === 'Compra realizada com sucesso!') {
-                            alert('Compra realizada com sucesso!');
-                        } else {
-                            alert('Erro ao realizar compra');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao realizar compra:', error);
-                    });
-                }
-            });
-    });
-});
+          function loadEventDetails() {
+              fetch(`/api/eventos/${eventId}`)
+                  .then(response => response.json())
+                  .then(data => {
+                      if (data.message === 'Sucesso') {
+                          const event = data.data;
+                          document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
+                          document.getElementById('event-name').textContent = event.nome;
+                          document.getElementById('event-description').textContent = event.descricao;
+                          document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
+                          document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
+                          document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
 
 
+                          // Adiciona os tipos de ingressos
+                          const ticketTypes = [
+                              { tipo: 'Inteira', preco: event.preco_inteira || 0 },
+                              { tipo: 'Meia', preco: event.preco_meia || 0 },
+                              { tipo: 'VIP', preco: event.preco_vip || 0 },
+                              { tipo: 'PCD_Idoso', preco: event.preco_pcd_idoso || 0 } // Alterado aqui
+                          ];
+
+                          const ticketTypesDiv = document.getElementById('ticket-types');
+                          ticketTypes.forEach(ticket => {
+                              const div = document.createElement('div');
+                              div.innerHTML = `
+                                  <label>${ticket.tipo} - R$ ${ticket.preco.toFixed(2)}</label>
+                                  <select id="quantidade_${ticket.tipo.toLowerCase()}" onchange="calculateTotal()">
+                                      <option value="0">0</option>
+                                      <option value="1">1</option>
+                                      <option value="2">2</option>
+                                      <option value="3">3</option>
+                                      <option value="4">4</option>
+                                      <option value="5">5</option>
+                                  </select>
+                                  <input type="hidden" id="preco_${ticket.tipo.toLowerCase()}" value="${ticket.preco.toFixed(2)}">
+                              `;
+                              ticketTypesDiv.appendChild(div);
+                          });
+                      } else {
+                          console.error('Erro ao carregar evento:', data.error);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Erro ao carregar evento:', error);
+                  });
+          }
+
+          // Função para calcular o total
+          window.calculateTotal = function() {
+              const ticketTypes = ['inteira', 'meia', 'vip', 'pcd_idoso']; // Alterado aqui
+              let total = 0;
+
+              ticketTypes.forEach(tipo => {
+                  const quantidadeElement = document.getElementById(`quantidade_${tipo}`);
+                  if (quantidadeElement) {
+                      const quantidade = parseInt(quantidadeElement.value) || 0;
+                      const precoElement = document.getElementById(`preco_${tipo}`);
+                      const preco = parseFloat(precoElement.value) || 0;
+                      total += quantidade * preco;
+                  }
+              });
+
+              // Atualizar o total no HTML
+              document.getElementById('total').textContent = `Total: R$ ${total.toFixed(2)}`;
+          };
+
+          // Comprar Ingressos
+          document.getElementById('buy-btn').addEventListener('click', () => {
+              // Verifica se o usuário está autenticado somente ao clicar no botão de compra
+              fetch('/api/verificar-autenticacao')
+                  .then(response => response.json())
+                  .then(data => {
+                      if (!data.autenticado) {
+                          alert('Você precisa estar logado para comprar ingressos. Por favor, cadastre-se ou faça login.');
+                          window.location.href = '/login'; // Redireciona para a página de login
+                      } else {
+                          // Se autenticado, procede com a compra
+                          const quantities = {
+                              inteira: document.getElementById('quantidade_inteira').value,
+                              meia: document.getElementById('quantidade_meia').value,
+                              vip: document.getElementById('quantidade_vip').value,
+                              pcd_idoso: document.getElementById('quantidade_pcd_idoso').value // Alterado aqui
+                          };
+
+                          fetch(`/api/comprar`, {
+                              method: 'POST',
+                              headers: {
+                                  'Content-Type': 'application/json'
+                              },
+                              body: JSON.stringify({
+                                  eventId: eventId,
+                                  quantidade: quantities
+                              })
+                          })
+                          .then(response => response.json())
+                          .then(data => {
+                              if (data.message === 'Compra realizada com sucesso!') {
+                                  alert('Compra realizada com sucesso!');
+                              } else {
+                                  alert('Erro ao realizar compra');
+                              }
+                          })
+                          .catch(error => {
+                              console.error('Erro ao realizar compra:', error);
+                          });
+                      }
+                  });
+          });
+      });
     </script>
 </body>
 </html>

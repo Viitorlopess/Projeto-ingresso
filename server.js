@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 const saltRounds = 10;
 
 // Iniciar o servidor
@@ -127,19 +127,51 @@ app.get('/dashboard-fornecedor.html', verificarAutenticacao, (req, res) => {
 
 // Endpoint para cadastrar eventos
 app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
-    if (req.session.user && req.session.user.tipo_usuario !== 'fornecedor') {
-        return res.status(403).json({ error: 'Acesso negado' });
-    }
+    const {
+        nome,
+        descricao,
+        data,
+        hora,
+        local,
+        quantidade_inteira,
+        preco_inteira,
+        quantidade_meia,
+        preco_meia,
+        quantidade_vip,
+        preco_vip,
+        quantidade_pcd_idoso,
+        preco_pcd_idoso,
+        imagem_url
+    } = req.body;
 
-    const fornecedorId = req.session.user.id;
-    const { nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url } = req.body;
-    
-    if (nome === "" || !validarNome(nome)) {
-        return res.status(400).json({ error: 'Insira o nome completo, o nome deve conter apenas letras.' });
-    }
+    // Pegue o ID do fornecedor da sessão
+    const fornecedor_id = req.session.user.id;
 
-    const sql = `INSERT INTO eventos (nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    const params = [nome, descricao, data, hora, local, quantidade_ingressos, tipo_ingresso, preco, imagem_url, fornecedorId];
+    // SQL para inserir dados no banco
+    const sql = `INSERT INTO eventos (nome, descricao, data, hora, local, 
+        quantidade_inteira, preco_inteira, 
+        quantidade_meia, preco_meia, 
+        quantidade_vip, preco_vip, 
+        quantidade_pcd_idoso, preco_pcd_idoso, 
+        imagem_url, fornecedor_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+        nome,
+        descricao,
+        data,
+        hora,
+        local,
+        quantidade_inteira,
+        preco_inteira,
+        quantidade_meia,
+        preco_meia,
+        quantidade_vip,
+        preco_vip,
+        quantidade_pcd_idoso,
+        preco_pcd_idoso,
+        imagem_url,
+        fornecedor_id // Adicione o fornecedor_id aqui
+    ];
 
     db.run(sql, params, function (err) {
         if (err) {

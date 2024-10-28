@@ -13,43 +13,72 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Função para atualizar o esquema do banco de dados
 function updateSchema() {
-    /*db.serialize(() => {
-        Adicionar coluna imagem_url à tabela eventos
-        db.run(`ALTER TABLE eventos ADD COLUMN imagem_url TEXT`, (err) => {
+    // Adicionar novas colunas à tabela eventos
+    db.serialize(() => {
+        db.run(`ALTER TABLE eventos ADD COLUMN quantidade_inteira INTEGER DEFAULT 0`, (err) => {
             if (err) {
-                console.error('Erro ao adicionar a coluna imagem_url:', err.message);
+                console.error('Erro ao adicionar a coluna quantidade_inteira:', err.message);
             } else {
-                console.log('Coluna imagem_url adicionada com sucesso.');
+                console.log('Coluna quantidade_inteira adicionada com sucesso.');
             }
-        });*/
+        });
 
-        db.serialize(() => {
-            db.run(`ALTER TABLE eventos ADD COLUMN local TEXT `, (err) => {
+        db.run(`ALTER TABLE eventos ADD COLUMN preco_inteira REAL DEFAULT 0.00`, (err) => {
             if (err) {
-                console.error('Erro ao adicionar a coluna local_evento:', err.message);
+                console.error('Erro ao adicionar a coluna preco_inteira:', err.message);
             } else {
-                console.log('Coluna local_evento adicionada com sucesso.');
+                console.log('Coluna preco_inteira adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN quantidade_meia INTEGER DEFAULT 0`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna quantidade_meia:', err.message);
+            } else {
+                console.log('Coluna quantidade_meia adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN preco_meia REAL DEFAULT 0.00`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna preco_meia:', err.message);
+            } else {
+                console.log('Coluna preco_meia adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN quantidade_vip INTEGER DEFAULT 0`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna quantidade_vip:', err.message);
+            } else {
+                console.log('Coluna quantidade_vip adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN preco_vip REAL DEFAULT 0.00`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna preco_vip:', err.message);
+            } else {
+                console.log('Coluna preco_vip adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN quantidade_pcd_idoso INTEGER DEFAULT 0`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna quantidade_pcd_idoso:', err.message);
+            } else {
+                console.log('Coluna quantidade_pcd_idoso adicionada com sucesso.');
+            }
+        });
+
+        db.run(`ALTER TABLE eventos ADD COLUMN preco_pcd_idoso REAL DEFAULT 0.00`, (err) => {
+            if (err) {
+                console.error('Erro ao adicionar a coluna preco_pcd_idoso:', err.message);
+            } else {
+                console.log('Coluna preco_pcd_idoso adicionada com sucesso.');
             }
         });
     });
-
-        /* Adicionar coluna data à tabela eventos
-        db.run(`ALTER TABLE eventos ADD COLUMN data TEXT`, (err) => {
-            if (err) {
-                console.error('Erro ao adicionar a coluna data:', err.message);
-            } else {
-                console.log('Coluna data adicionada com sucesso.');
-            }
-        });
-
-        db.run(`ALTER TABLE eventos ADD COLUMN fornecedor_id INTEGER`, (err) => {
-            if (err) {
-                console.error('Erro ao adicionar a coluna data:', err.message);
-            } else {
-                console.log('Coluna data adicionada com sucesso.');
-            }
-        });
-    });*/
 }
 
 // Executar a atualização do esquema

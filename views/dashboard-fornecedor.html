@@ -13,6 +13,33 @@
             background-color: #f4f4f4;
         }
 
+        /* Estilo do menu lateral */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 100%;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .sidebar img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+
         /* Estilo do conteúdo principal */
         .container {
             margin-left: 80px; /* Largura do menu lateral + algum espaço */
@@ -112,13 +139,15 @@
     </style>
 </head>
 <body>
+    <div class="sidebar">
+        <a href="minha_conta.html"><img src="icons/icone_conta.png" alt="Minha Conta"><span>Conta</span></a>
+        <a href="meus_pedidos.html"><img src="icons/icone_pedidos.png" alt="Meus Pedidos"><span>Pedidos</span></a>
+        <a href="politica_historia.html"><img src="icons/icone_politica.png" alt="Política e História"><span>Política</span></a>
+    </div>
     <div class="container">
         <header>
             <h1>Easy Tickets - Meu Perfil Fornecedor</h1>
-            <!-- Barra de Pesquisa -->
             <input type="text" id="search-bar" placeholder="Pesquisar eventos...">
-            
-            <!-- Adicionar links de Cadastro e Login -->
             <div class="auth-links">
                 <button id="logout-btn" class="btn">Sair</button>
                 <a href="/cadastrar_evento" class="btn">Cadastrar Evento</a>
@@ -171,8 +200,15 @@
                     const eventDescription = document.createElement('p');
                     eventDescription.textContent = event.descricao || 'Descrição não disponível';
 
-                    const eventPrice = document.createElement('p');
-                    eventPrice.textContent = `Preço: R$ ${event.preco}`;
+                    const eventDate = document.createElement('p');
+                    const date = event.data ? new Date(event.data).toLocaleDateString() : 'Data não disponível';
+                    eventDate.textContent = `Data: ${date}`;
+
+                    const eventTime = document.createElement('p');
+                    eventTime.textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
+
+                    const eventLocation = document.createElement('p');
+                    eventLocation.textContent = `Local: ${event.local || 'Local não disponível'}`;
 
                     const eventButtonEdit = document.createElement('a');
                     eventButtonEdit.href = `editar-evento.html?id=${event.id}`;
@@ -197,7 +233,9 @@
 
                     eventDetails.appendChild(eventName);
                     eventDetails.appendChild(eventDescription);
-                    eventDetails.appendChild(eventPrice);
+                    eventDetails.appendChild(eventDate);
+                    eventDetails.appendChild(eventTime);
+                    eventDetails.appendChild(eventLocation);
                     eventItem.appendChild(eventImage);
                     eventItem.appendChild(eventDetails);
                     eventItem.appendChild(eventButtonEdit);
