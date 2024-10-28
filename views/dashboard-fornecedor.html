@@ -34,12 +34,6 @@
             text-align: center;
         }
 
-        .sidebar img {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 5px;
-        }
-
         /* Estilo do conteúdo principal */
         .container {
             margin-left: 80px; /* Largura do menu lateral + algum espaço */
@@ -106,7 +100,9 @@
         }
 
         .event-item div {
-            padding: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 15px;
         }
 
         .event-item button {
@@ -116,7 +112,9 @@
             padding: 10px;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-bottom: 15px;        
         }
 
         .event-item button:hover {
@@ -140,9 +138,8 @@
 </head>
 <body>
     <div class="sidebar">
-        <a href="minha_conta.html"><img src="icons/icone_conta.png" alt="Minha Conta"><span>Conta</span></a>
-        <a href="meus_pedidos.html"><img src="icons/icone_pedidos.png" alt="Meus Pedidos"><span>Pedidos</span></a>
-        <a href="politica_historia.html"><img src="icons/icone_politica.png" alt="Política e História"><span>Política</span></a>
+        <a href="minha_conta.html"><span>Conta</span></a>
+        <a href="meus_pedidos.html"><span>Pedidos</span></a>
     </div>
     <div class="container">
         <header>
@@ -211,9 +208,11 @@
                     eventLocation.textContent = `Local: ${event.local || 'Local não disponível'}`;
 
                     const eventButtonEdit = document.createElement('a');
-                    eventButtonEdit.href = `editar-evento.html?id=${event.id}`;
                     eventButtonEdit.innerHTML = '<button>Editar Evento</button>';
-
+                    eventButtonEdit.addEventListener('click', () =>{
+                        window.location.href = `editar.html?id=${event.id}`;
+                    })
+    
                     const eventButtonDelete = document.createElement('button');
                     eventButtonDelete.textContent = 'Excluir';
                     eventButtonDelete.addEventListener('click', () => {

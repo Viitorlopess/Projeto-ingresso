@@ -125,6 +125,10 @@ app.get('/dashboard-fornecedor.html', verificarAutenticacao, (req, res) => {
     }
 });
 
+app.get('/editar.html', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'editar.html'));
+})
+
 // Endpoint para cadastrar eventos
 app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
     const {
@@ -464,3 +468,22 @@ app.get('/api/verificar-autenticacao', (req, res) => {
     }
 });
 
+// Endpoint para editar um evento
+app.put('/api/eventos/:id', (req, res) => {
+    const eventId = parseInt(req.params.id);
+    const eventIndex = eventos.findIndex(event => event.id === eventId);
+
+    if (eventIndex !== -1) {
+        // Atualizando o evento com os dados recebidos
+        eventos[eventIndex] = {
+            id: eventId,
+            nome: req.body.nome,
+            descricao: req.body.descricao,
+            preco: req.body.preco,
+            imagem_url: req.body.imagem_url
+        };
+        return res.json({ message: 'Evento atualizado com sucesso!', data: eventos[eventIndex] });
+    } else {
+        return res.status(404).json({ message: 'Evento não encontrado.' });
+    }
+});
