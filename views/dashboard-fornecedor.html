@@ -207,6 +207,9 @@
                     const eventLocation = document.createElement('p');
                     eventLocation.textContent = `Local: ${event.local || 'Local não disponível'}`;
 
+                    const eventGenero = document.createElement('p');
+                    eventGenero.textContent = `Gênero : ${event.genero || 'Gênero não disponível'}`;
+
                     const eventButtonEdit = document.createElement('a');
                     eventButtonEdit.innerHTML = '<button>Editar Evento</button>';
                     eventButtonEdit.addEventListener('click', () =>{
@@ -235,6 +238,7 @@
                     eventDetails.appendChild(eventDate);
                     eventDetails.appendChild(eventTime);
                     eventDetails.appendChild(eventLocation);
+                    eventDetails.appendChild(eventGenero);
                     eventItem.appendChild(eventImage);
                     eventItem.appendChild(eventDetails);
                     eventItem.appendChild(eventButtonEdit);

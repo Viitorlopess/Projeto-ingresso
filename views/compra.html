@@ -63,6 +63,7 @@
             <p id="event-date">Data: </p>
             <p id="event-time">Hora: </p>
             <p id="event-local">Local: </p>
+            <p id="event-genero">Gênero: </p>
         </div>
         <div class="buy-tickets">
             <h3>Comprar Ingressos</h3>
@@ -93,6 +94,7 @@
                           document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
                           document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
                           document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
+                          document.getElementById('event-genero').textContent = `Gênero: ${event.genero || 'Gênero não disponível'}`;
 
 
                           // Adiciona os tipos de ingressos
