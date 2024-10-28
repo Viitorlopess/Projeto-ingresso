@@ -1,12 +1,7 @@
-/* Reset básico */
-* {
+body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-/* Estilo do corpo da página */
-body {
     font-family: Arial;
     background-color: #f4f4f4;
 }
@@ -120,30 +115,12 @@ header .btn:hover {
     padding: 10px;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 5px;
+    width: 100%;
+    
 }
-
-.event-item but {
-    background-color: #ff0000;
-    border: none;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 5px;
-    margin-left: 5px;
-    width: fit-content;
-    margin-bottom: 5px;
-}
-
-
 
 .event-item button:hover {
     background-color: #0056b3;
-}
-
-.event-item but:hover {
-    background-color: #e72222;
 }
 
 /* Estilo da publicidade */

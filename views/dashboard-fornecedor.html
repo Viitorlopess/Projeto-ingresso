@@ -13,6 +13,27 @@
             background-color: #f4f4f4;
         }
 
+        /* Estilo do menu lateral */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 100%;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            margin: 10px 0;
+            text-align: center;
+        }
+
         /* Estilo do conteúdo principal */
         .container {
             margin-left: 80px; /* Largura do menu lateral + algum espaço */
@@ -79,7 +100,9 @@
         }
 
         .event-item div {
-            padding: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 15px;
         }
 
         .event-item button {
@@ -89,7 +112,9 @@
             padding: 10px;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-bottom: 15px;        
         }
 
         .event-item button:hover {
@@ -112,6 +137,10 @@
     </style>
 </head>
 <body>
+    <div class="sidebar">
+        <a href="minha_conta.html"><span>Conta</span></a>
+        <a href="meus_pedidos.html"><span>Pedidos</span></a>
+    </div>
     <div class="container">
         <header>
             <h1>Easy Tickets - Meu Perfil Fornecedor</h1>
@@ -175,9 +204,11 @@
                     eventPrice.textContent = `Preço: R$ ${event.preco}`;
 
                     const eventButtonEdit = document.createElement('a');
-                    eventButtonEdit.href = `editar-evento.html?id=${event.id}`;
                     eventButtonEdit.innerHTML = '<button>Editar Evento</button>';
-
+                    eventButtonEdit.addEventListener('click', () =>{
+                        window.location.href = `editar.html?id=${event.id}`;
+                    })
+    
                     const eventButtonDelete = document.createElement('button');
                     eventButtonDelete.textContent = 'Excluir';
                     eventButtonDelete.addEventListener('click', () => {

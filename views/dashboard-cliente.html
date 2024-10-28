@@ -13,6 +13,27 @@
             background-color: #f4f4f4;
         }
 
+        /* Estilo do menu lateral */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 100%;
+            background-color: #007bff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            margin: 10px 0;
+            text-align: center;
+        }
+
         /* Estilo do conteúdo principal */
         .container {
             margin-left: 80px; /* Largura do menu lateral + algum espaço */
@@ -62,11 +83,12 @@
         }
 
         .event-item {
+            position: relative;
             background-color: white;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            flex: 1 1 calc(33.333% - 20px); /* Três eventos por linha com espaçamento */
+            flex: 1 1 calc(33.333% - 20px);
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
@@ -79,17 +101,21 @@
         }
 
         .event-item div {
-            padding: 15px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 15px;
         }
 
-        .event-item button {
+        .event-item .saiba-mais-btn {
             background-color: #007bff;
             border: none;
             color: white;
             padding: 10px;
             border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-bottom: 15px;
         }
 
         .event-item button:hover {
@@ -109,13 +135,33 @@
             gap: 10px;
             align-items: center;
         }
+
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: gray;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s;;
+        }
+
+        .favorite-btn.favorited {
+            color: gold;
+        }
     </style>
 </head>
 <body>
+    <div class="sidebar">
+        <a href="minha_conta.html"><span>Conta</span></a>
+        <a href="meus_pedidos.html"><span>Pedidos</span></a>
+    </div>
     <div class="container">
         <header>
             <h1>Easy Tickets - Meu Perfil Cliente</h1>
-            <input type="text" id="search-bar" placeholder="Pesquisar eventos...">
+                <input type="text" id="search-bar" placeholder="Pesquisar eventos...">
             <div class="auth-links">
                 <button id="logout-btn" class="btn">Sair</button>
             </div>
@@ -133,12 +179,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const eventList = document.getElementById('event-list');
+            let allEvents = []; // Variável para armazenar todos os eventos
 
             function loadEvents() {
                 fetch('/api/eventos') // Rota para pegar eventos para o cliente
                     .then(response => response.json())
                     .then(data => {
                         if (data.message === 'Sucesso') {
+                            allEvents = data.data; // Armazena todos os eventos
                             displayEvents(data.data);
                         } else {
                             console.error('Erro ao carregar eventos:', data.error);
@@ -152,9 +200,10 @@
             function displayEvents(events) {
                 eventList.innerHTML = '';
 
-                events.forEach(event => {
+                events.forEach((event, index) => {
                     const eventItem = document.createElement('div');
                     eventItem.className = 'event-item';
+                    eventItem.dataset.index = index; // Salva a posição inicial do evento
 
                     const eventImage = document.createElement('img');
                     eventImage.src = event.imagem_url || 'default-image.png';
@@ -176,8 +225,28 @@
 
                     const eventButton = document.createElement('button');
                     eventButton.textContent = 'Saber Mais';
+                    eventButton.className = 'saiba-mais-btn';
                     eventButton.addEventListener('click', () => {
                         window.location.href = `compra.html?id=${event.id}`; // Redireciona para a página de compra
+                    });
+
+                    // Ícone de Favoritar
+                    const favoriteButton = document.createElement('button');
+                    favoriteButton.className = 'favorite-btn';
+                    favoriteButton.innerHTML = '&#9733;'; // Ícone de estrela
+                    favoriteButton.addEventListener('click', () => {
+                    favoriteButton.classList.toggle('favorited');
+
+                        if (favoriteButton.classList.contains('favorited')) {
+                            eventList.prepend(eventItem); // Move o item para o início da lista
+                        } else {
+                            // Volta para a posição original
+                            const originalIndex = parseInt(eventItem.dataset.index, 10);
+                            const nextSibling = Array.from(eventList.children).find(
+                                (el) => parseInt(el.dataset.index, 10) > originalIndex
+                            );
+                            eventList.insertBefore(eventItem, nextSibling); // Insere antes do próximo elemento com índice maior
+                        }
                     });
 
                     eventDetails.appendChild(eventName);
@@ -187,9 +256,22 @@
                     eventItem.appendChild(eventImage);
                     eventItem.appendChild(eventDetails);
                     eventItem.appendChild(eventButton);
+                    eventItem.appendChild(favoriteButton);
                     eventList.appendChild(eventItem);
                 });
             }
+
+            function filterEvents(searchTerm) {
+                const filteredEvents = allEvents.filter(event =>
+                    event.nome && event.nome.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                displayEvents(filteredEvents);
+            }
+
+            document.getElementById('search-bar').addEventListener('input', (e) => {
+                const searchTerm = e.target.value;
+                filterEvents(searchTerm);
+            });
 
             loadEvents();
         });

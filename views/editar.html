@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Evento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Editar Evento</h1>
+    </header>
+    <div class="container">
+        <form id="edit-event-form">
+            <label for="event-name">Nome:</label>
+            <input type="text" id="event-name" required>
+
+            <label for="event-description">Descrição:</label>
+            <textarea id="event-description" required></textarea>
+
+            <label for="event-data">Data:</label>
+            <input type="date" id="event-data" required>
+
+            <label for="event-time">Hora:</label>
+            <input type="time" id="event-time" required>
+
+            <label for="event-local">Local:</label>
+            <input type="text" id="event-local" required>
+
+            <label for="Quantidade-ingresso">Quantidade de ingresso:</label>
+            <input type="number" id="Quantidade-ingresso" required>
+
+            <label for="tipo-ingresso">Tipo de ingresso:</label>
+            <input type="text" id="tipo-ingresso" required>
+            
+            <label for="event-price">Preço:</label>
+            <input type="number" id="event-price" required>
+
+            <label for="event-image">URL da imagem:</label>
+            <input type="url" id="event-image" required>
+
+            <button type="submit">Salvar Alterações:</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+
+            fetch(`/api/eventos/${eventId}`) // Busca os dados do evento
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Sucesso') {
+                        const event = data.data;
+                        document.getElementById('event-name').value = event.nome;
+                        document.getElementById('event-description').value = event.descricao;
+                        document.getElementById('event-price').value = event.preco;
+                        document.getElementById('event-image').value = event.imagem_url;
+                    } else {
+                        alert('Erro ao carregar os dados do evento.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar evento:', error);
+                });
+
+            document.getElementById('edit-event-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const updatedEvent = {
+                    nome: document.getElementById('event-name').value,
+                    descricao: document.getElementById('event-description').value,
+                    preco: document.getElementById('event-price').value,
+                    imagem_url: document.getElementById('event-image').value
+                };
+
+                fetch(`/api/eventos/${eventId}`, {
+                    method: 'PUT', // Método para atualizar o evento
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedEvent)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Evento atualizado com sucesso!') {
+                        alert('Evento atualizado com sucesso!');
+                        window.location.href = 'dashboard-fornecedor.html'; // Redireciona de volta para a lista de eventos
+                    } else {
+                        alert('Erro ao atualizar o evento.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao atualizar evento:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
