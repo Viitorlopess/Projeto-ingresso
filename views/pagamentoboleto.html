@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento via Boleto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .event-details {
+            margin: 20px 0;
+        }
+        .boleto {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pagamento via Boleto</h1>
+        <div class="event-details">
+            <h2 id="event-name">Nome do Evento</h2>
+            <p id="event-date">Data: </p>
+            <p id="event-price">Preço Total: R$ 0,00</p>
+            <p id="event-quantity">Quantidade: 0</p>
+        </div>
+
+        <div class="boleto">
+            <h3>Boleto para Pagamento</h3>
+            <img id="boleto-image" src="" alt="Boleto para pagamento" />
+        </div>
+
+        <div class="instructions">
+            <h3>Instruções de Pagamento</h3>
+            <p>1. Baixe o boleto clicando na imagem acima.</p>
+            <p>2. Abra seu aplicativo de banco.</p>
+            <p>3. Selecione a opção de pagamento por boleto.</p>
+            <p>4. Escaneie o código de barras ou digite o código manualmente.</p>
+            <p>5. Confirme o pagamento.</p>
+        </div>
+
+        <a href="/dashboard-cliente.html" class="submit-button">Voltar para a página principal</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('eventId');
+            const quantity = urlParams.get('quantidade');
+
+            // Simulação de chamada para obter detalhes do evento
+            fetch(`/api/eventos/${eventId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Sucesso') {
+                        const event = data.data;
+                        document.getElementById('event-name').textContent = event.nome;
+                        document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
+                        const totalPrice = (event.preco * quantity).toFixed(2);
+                        document.getElementById('event-price').textContent = `Preço Total: R$ ${totalPrice}`;
+                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+
+                        // Aqui deve gerar o boleto e definir a imagem correspondente
+                        generateBoleto(eventId, totalPrice);
+                    } else {
+                        console.error('Erro ao carregar evento:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar evento:', error);
+                });
+
+            function generateBoleto(eventId, totalPrice) {
+                //  implementar a lógica para gerar o boleto
+                // e obter a URL ou imagem do boleto.
+            
+                const boletoUrl = `/api/gerar-boleto?eventId=${eventId}&valor=${totalPrice}`;
+                document.getElementById('boleto-image').src = boletoUrl;
+            }
+        });
+    </script>
+</body>
+</html>
+

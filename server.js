@@ -127,7 +127,23 @@ app.get('/dashboard-fornecedor.html', verificarAutenticacao, (req, res) => {
 
 app.get('/editar.html', verificarAutenticacao, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'editar.html'));
-})
+});
+
+app.get('/dadoscomprador.html', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'dadoscomprador.html'));
+});
+
+app.get('/pagamentoboleto.html', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pagamentoboleto.html'));
+});
+
+app.get('/pagamentocartao.html', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pagamentocartao.html'));
+});
+
+app.get('/pagamentopix.html', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'pagamentopix.html'));
+});
 
 // Endpoint para cadastrar eventos
 app.post('/api/cadastrar_evento', verificarAutenticacao, (req, res) => {
@@ -517,4 +533,3 @@ app.put('/api/eventos/:id', (req, res) => {
         res.json({ message: 'Evento atualizado com sucesso!' });
     });
 });
-

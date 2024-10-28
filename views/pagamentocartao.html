@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .event-details, .payment-details {
+            margin: 20px 0;
+        }
+        .payment-details label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .payment-details input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resumo da Compra</h1>
+        <div class="event-details">
+            <h2 id="event-name">Nome do Evento</h2>
+            <p id="event-date">Data: </p>
+            <p id="event-price">Preço Total: R$ 0,00</p>
+            <p id="event-quantity">Quantidade: 0</p>
+        </div>
+        
+        <div class="payment-details">
+            <h3>Detalhes do Pagamento</h3>
+            <label for="card-name">Nome no Cartão:</label>
+            <input type="text" id="card-name" placeholder="Nome completo" required>
+
+            <label for="card-number">Número do Cartão:</label>
+            <input type="text" id="card-number" placeholder="XXXX-XXXX-XXXX-XXXX" required>
+
+            <label for="expiry-date">Data de Validade:</label>
+            <input type="text" id="expiry-date" placeholder="MM/AA" required>
+
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" placeholder="XXX" required>
+
+            <button class="submit-button" id="pay-btn">Pagar</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('eventId');
+            const quantity = urlParams.get('quantidade');
+
+            // Simulação de chamada para obter detalhes do evento
+            fetch(`/api/eventos/${eventId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Sucesso') {
+                        const event = data.data;
+                        document.getElementById('event-name').textContent = event.nome;
+                        document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
+                        document.getElementById('event-price').textContent = `Preço Total: R$ ${(event.preco * quantity).toFixed(2)}`;
+                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+                    } else {
+                        console.error('Erro ao carregar evento:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar evento:', error);
+                });
+
+            document.getElementById('pay-btn').addEventListener('click', () => {
+                const cardName = document.getElementById('card-name').value;
+                const cardNumber = document.getElementById('card-number').value;
+                const expiryDate = document.getElementById('expiry-date').value;
+                const cvv = document.getElementById('cvv').value;
+
+                // Validação básica dos campos
+                if (!cardName || !cardNumber || !expiryDate || !cvv) {
+                    alert('Por favor, preencha todos os campos.');
+                    return;
+                }
+
+                // adicionar a lógica para processar o pagamento
+                alert('Pagamento realizado com sucesso!');
+                window.location.href = '/dashboard-cliente.html'; // Redirecionar para a página de confirmação
+            });
+        });
+    </script>
+</body>
+</html>

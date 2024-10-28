@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento via PIX</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .event-details {
+            margin: 20px 0;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pagamento via PIX</h1>
+        <div class="event-details">
+            <label for="event-name">Nome do evento:</label>
+            <input type="text" id="event-name">
+            <p id="event-name">Nome do Evento: </p>
+            <p id="event-date">Data: </p>
+            <p id="event-price">Preço Total: R$ 0,00</p>
+            <p id="event-quantity">Quantidade: 0</p>
+        </div>
+
+        <div class="qr-code">
+            <h3>QRCode para Pagamento</h3>
+            <img id="qr-code" src="" alt="QRCode para pagamento" />
+        </div>
+
+        <div class="instructions">
+            <h3>Instruções de Pagamento</h3>
+            <p>1. Abra seu aplicativo de banco.</p>
+            <p>2. Selecione a opção de pagamento via PIX.</p>
+            <p>3. Escaneie o QR Code acima.</p>
+            <p>4. Confirme o valor e finalize o pagamento.</p>
+        </div>
+
+        <a href="/dashboard-cliente.html" class="submit-button">Voltar para a página principal</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventId = urlParams.get('Id');
+
+            // Simulação de chamada para obter detalhes do evento
+            fetch(`/api/eventos/${eventId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Sucesso') {
+                        const event = data.data;
+                        document.getElementById('event-name').value = event.nome;
+                        document.getElementById('event-date').value = event.data
+                        const totalPrice = (event.preco * quantity).toFixed(2);
+                        document.getElementById('event-price').textContent = `Preço Total: R$ ${totalPrice}`;
+                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+
+                        // Aqui você deve gerar o QR Code com a chave PIX e o valor total
+                        generateQRCode(`PIX_CHAVE|${totalPrice}`);
+                    } else {
+                        console.error('Erro ao carregar evento:', data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar evento:', error);
+                });
+
+            function generateQRCode(data) {
+                const qrCodeElement = document.getElementById('qr-code');
+                // Use uma uma biblioteca para gerar o código
+                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(data)}&size=200x200`;
+                qrCodeElement.src = qrCodeUrl;
+            }
+        });
+    </script>
+</body>
+</html>
+
