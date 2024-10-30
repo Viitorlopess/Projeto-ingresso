@@ -54,10 +54,10 @@
     <div class="container">
         <h1>Resumo da Compra</h1>
         <div class="event-details">
-            <h2 id="event-name">Nome do Evento</h2>
-            <p id="event-date">Data: </p>
-            <p id="event-price">Preço Total: R$ 0,00</p>
-            <p id="event-quantity">Quantidade: 0</p>
+            <p id="event-name">Nome do evento:</p>
+            <p id="event-date">Data:</p>
+            <p id="event-time">Hora:</p>
+            <p id="event-local">Local</p>
         </div>
         
         <div class="payment-details">
@@ -81,8 +81,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const eventId = urlParams.get('eventId');
-            const quantity = urlParams.get('quantidade');
+            const eventId = urlParams.get('id');
 
             // Simulação de chamada para obter detalhes do evento
             fetch(`/api/eventos/${eventId}`)
@@ -91,9 +90,9 @@
                     if (data.message === 'Sucesso') {
                         const event = data.data;
                         document.getElementById('event-name').textContent = event.nome;
-                        document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
-                        document.getElementById('event-price').textContent = `Preço Total: R$ ${(event.preco * quantity).toFixed(2)}`;
-                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+                        document.getElementById('event-date').textContent = `Data: ${event.data}`;
+                        document.getElementById('event-time').textContent = `Hora: ${event.hora}`;
+                        document.getElementById('event-local').textContent = `Local: ${event.local}`
                     } else {
                         console.error('Erro ao carregar evento:', data.error);
                     }

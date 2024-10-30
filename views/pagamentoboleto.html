@@ -56,15 +56,15 @@
     <div class="container">
         <h1>Pagamento via Boleto</h1>
         <div class="event-details">
-            <h2 id="event-name">Nome do Evento</h2>
-            <p id="event-date">Data: </p>
-            <p id="event-price">Preço Total: R$ 0,00</p>
-            <p id="event-quantity">Quantidade: 0</p>
+            <p id="event-name">Nome do evento:</p>
+            <p id="event-date">Data:</p>
+            <p id="event-time">Hora:</p>
+            <p id="event-local">Local</p>
         </div>
 
         <div class="boleto">
             <h3>Boleto para Pagamento</h3>
-            <img id="boleto-image" src="" alt="Boleto para pagamento" />
+            <a href="" target="_blank">Link para pagamento</a>
         </div>
 
         <div class="instructions">
@@ -82,8 +82,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const eventId = urlParams.get('eventId');
-            const quantity = urlParams.get('quantidade');
+            const eventId = urlParams.get('id');
 
             // Simulação de chamada para obter detalhes do evento
             fetch(`/api/eventos/${eventId}`)
@@ -92,13 +91,10 @@
                     if (data.message === 'Sucesso') {
                         const event = data.data;
                         document.getElementById('event-name').textContent = event.nome;
-                        document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
-                        const totalPrice = (event.preco * quantity).toFixed(2);
-                        document.getElementById('event-price').textContent = `Preço Total: R$ ${totalPrice}`;
-                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+                        document.getElementById('event-date').textContent = `Data: ${event.data}`;
+                        document.getElementById('event-time').textContent = `Hora: ${event.hora}`;
+                        document.getElementById('event-local').textContent = `Local: ${event.local}`;
 
-                        // Aqui deve gerar o boleto e definir a imagem correspondente
-                        generateBoleto(eventId, totalPrice);
                     } else {
                         console.error('Erro ao carregar evento:', data.error);
                     }
@@ -106,14 +102,6 @@
                 .catch(error => {
                     console.error('Erro ao carregar evento:', error);
                 });
-
-            function generateBoleto(eventId, totalPrice) {
-                //  implementar a lógica para gerar o boleto
-                // e obter a URL ou imagem do boleto.
-            
-                const boletoUrl = `/api/gerar-boleto?eventId=${eventId}&valor=${totalPrice}`;
-                document.getElementById('boleto-image').src = boletoUrl;
-            }
         });
     </script>
 </body>

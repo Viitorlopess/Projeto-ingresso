@@ -80,40 +80,36 @@
             <input type="radio" id="cartao" name="pagamento" value="cartao">
             <label for="cartao">Cartão de Crédito</label>
         </div>
-        <button type="submit">Finalizar Compra</button>
+
+        <button type="submit" id="button">Finalizar Compra</button>
     </form>
 </div>
 
 <script>
-    document.getElementById('compradorForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Impede o envio do formulário padrão
+        document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
 
-        const nome = document.getElementById('nome').value;
-        const cpf = document.getElementById('cpf').value;
-        const email = document.getElementById('email').value;
-        const telefone = document.getElementById('telefone').value;
-        const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
+        document.getElementById('compradorForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        // Redirecionar com base na forma de pagamento selecionada
-        let redirectUrl;
-        switch (pagamento) {
-            case 'pix':
-                redirectUrl = 'pagamentopix.html'; // Altere para o caminho da sua página de pagamento Pix
-                break;
-            case 'boleto':
-                redirectUrl = 'pagamentoboleto.html'; // Altere para o caminho da sua página de pagamento Boleto
-                break;
-            case 'cartao':
-                redirectUrl = 'pagamentocartao.html'; // Altere para o caminho da sua página de pagamento Cartão
-                break;
-            default:
-                redirectUrl = 'dadoscomprador.html'; // Página padrão caso algo dê errado
-        }
+            const nome = document.getElementById('nome').value;
+            const cpf = document.getElementById('cpf').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
 
-        // Redirecionar para a página de pagamento correspondente
-        window.location.href = redirectUrl;
+            // Obtém a forma de pagamento selecionada
+            const pagamento = document.querySelector('input[name="pagamento"]:checked').value;
 
-        // Se você quiser também exibir um alerta de sucesso, pode fazer isso aqui
+            // Redireciona para a página correta com base na forma de pagamento
+            if (pagamento === 'pix') {
+                window.location.href = `pagamentopix.html?id=${eventId}`;
+            } else if (pagamento === 'boleto') {
+                window.location.href = `pagamentoboleto.html?id=${eventId}`;
+            } else if (pagamento === 'cartao') {
+                window.location.href = `pagamentocartao.html?id=${eventId}`;
+            }
+        });
     });
 </script>
 

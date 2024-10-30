@@ -15,15 +15,13 @@ const db = new sqlite3.Database(dbPath, (err) => {
 function updateSchema() {
     // Adicionar novas colunas à tabela eventos
     db.serialize(() => {
-        db.run(`ALTER TABLE eventos ADD COLUMN genero TXT`, (err) => {
+        db.run(`ALTER TABLE eventos ADD COLUMN lote number`, (err) => {
             if (err) {
-                console.error('Erro ao adicionar a coluna genero', err.message);
+                console.error('Erro ao adicionar a coluna lote', err.message);
             } else {
-                console.log('Coluna genero adicionada com sucesso.');
+                console.log('Coluna lote adicionada com sucesso.');
             }
         });
-
-       
     });
 }
 

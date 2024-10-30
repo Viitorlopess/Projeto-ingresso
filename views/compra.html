@@ -64,6 +64,7 @@
             <p id="event-time">Hora: </p>
             <p id="event-local">Local: </p>
             <p id="event-genero">Gênero: </p>
+            <p id="event-lote">Lote: </p>
         </div>
         <div class="buy-tickets">
             <h3>Comprar Ingressos</h3>
@@ -82,21 +83,20 @@
         // Carregar os detalhes do evento
         loadEventDetails();
 
-          function loadEventDetails() {
-              fetch(`/api/eventos/${eventId}`)
-                  .then(response => response.json())
-                  .then(data => {
-                      if (data.message === 'Sucesso') {
-                          const event = data.data;
-                          document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
-                          document.getElementById('event-name').textContent = event.nome;
-                          document.getElementById('event-description').textContent = event.descricao;
-                          document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
-                          document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
-                          document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
-                          document.getElementById('event-genero').textContent = `Gênero: ${event.genero || 'Gênero não disponível'}`;
-
-
+            function loadEventDetails() {
+                fetch(`/api/eventos/${eventId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Sucesso') {
+                            const event = data.data;
+                            document.getElementById('event-image').src = event.imagem_url || 'default-image.png';
+                            document.getElementById('event-name').textContent = event.nome;
+                            document.getElementById('event-description').textContent = event.descricao;
+                            document.getElementById('event-date').textContent = `Data: ${new Date(event.data).toLocaleDateString('pt-BR')}`;
+                            document.getElementById('event-time').textContent = `Hora: ${event.hora || 'Hora não disponível'}`;
+                            document.getElementById('event-local').textContent = `Local: ${event.local || 'Local não disponível'}`;
+                            document.getElementById('event-genero').textContent = `Gênero: ${event.genero || 'Gênero não disponível'}`;
+                            document.getElementById('event-lote').textContent = `Lote: ${event.lote || 'Lote não disponível'}`;
                         // Adiciona os tipos de ingressos
                         const ticketTypes = [
                             { tipo: 'Inteira', preco: event.preco_inteira || 0 },
@@ -161,7 +161,7 @@
                         window.location.href = '/login'; // Redireciona para a página de login
                     } else {
                         // Se autenticado, procede com a compra
-                        window.location.href = '/dadoscomprador.html';
+                        window.location.href = `dadoscomprador.html?id=${eventId}`;
                         /*const quantities = {
                             inteira: document.getElementById('quantidade_inteira').value,
                             meia: document.getElementById('quantidade_meia').value,

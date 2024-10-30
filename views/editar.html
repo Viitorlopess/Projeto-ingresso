@@ -31,7 +31,7 @@
             max-width: 600px; /* Define a largura máxima do formulário */
             width: 100%; /* Faz o formulário ocupar 100% da largura disponível */
             padding: 20px;
-            margin-top: 40%;
+            margin-top: 50%;
             background-color: white;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -86,6 +86,9 @@
 
             <h3>Ingressos</h3>
 
+            <label for="event-lote">Lote</label>
+            <input type="number" id="event-lote" name="lote" required>
+
             <label for="quantidade-inteira">Quantidade - inteira:</label>
             <input type="number" id="quantidade-inteira" required>
 
@@ -121,7 +124,7 @@
         document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('id');
-
+        
             fetch(`/api/eventos/${eventId}`) // Busca os dados do evento
                 .then(response => response.json())
                 .then(data => {
@@ -133,6 +136,7 @@
                         document.getElementById('event-time').value = event.hora;
                         document.getElementById('event-local').value = event.local;
                         document.getElementById('event-genero').value = event.genero;
+                        document.getElementById('event-lote').value = event.lote;
                         document.getElementById('quantidade-inteira').value = event.quantidade_inteira;
                         document.getElementById('preco-inteira').value = event.preco_inteira;
                         document.getElementById('quantidade-meia').value = event.quantidade_meia;
@@ -159,6 +163,7 @@
                     hora: document.getElementById('event-time').value,
                     local: document.getElementById('event-local').value,
                     genero: document.getElementById('event-genero').value,
+                    lote: document.getElementById('event-lote').value,
                     quantidade_inteira: document.getElementById('quantidade-inteira').value,
                     preco_inteira: document.getElementById('preco-inteira').value,
                     quantidade_meia: document.getElementById('quantidade-meia').value,

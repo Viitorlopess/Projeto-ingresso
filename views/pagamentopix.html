@@ -19,6 +19,21 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        .ingressos-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .ingresso-item {
+            display: flex;
+            justify-content: space-between;
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
         h1 {
             text-align: center;
         }
@@ -56,17 +71,15 @@
     <div class="container">
         <h1>Pagamento via PIX</h1>
         <div class="event-details">
-            <label for="event-name">Nome do evento:</label>
-            <input type="text" id="event-name">
-            <p id="event-name">Nome do Evento: </p>
-            <p id="event-date">Data: </p>
-            <p id="event-price">Preço Total: R$ 0,00</p>
-            <p id="event-quantity">Quantidade: 0</p>
+            <p id="event-name">Nome do evento:</p>
+            <p id="event-date">Data:</p>
+            <p id="event-time">Hora:</p>
+            <p id="event-local">Local</p>
         </div>
 
         <div class="qr-code">
             <h3>QRCode para Pagamento</h3>
-            <img id="qr-code" src="" alt="QRCode para pagamento" />
+            <img id="qr-code" src="qr_code_1.jpg" alt="QRCode para pagamento" />
         </div>
 
         <div class="instructions">
@@ -83,37 +96,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const eventId = urlParams.get('Id');
+            const eventId = urlParams.get('id');
 
-            // Simulação de chamada para obter detalhes do evento
-            fetch(`/api/eventos/${eventId}`)
+            fetch(`/api/eventos/${eventId}`) // Busca os dados do evento
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === 'Sucesso') {
                         const event = data.data;
-                        document.getElementById('event-name').value = event.nome;
-                        document.getElementById('event-date').value = event.data
-                        const totalPrice = (event.preco * quantity).toFixed(2);
-                        document.getElementById('event-price').textContent = `Preço Total: R$ ${totalPrice}`;
-                        document.getElementById('event-quantity').textContent = `Quantidade: ${quantity}`;
+                        document.getElementById('event-name').textContent = event.nome;
+                        document.getElementById('event-date').textContent = `Data: ${event.data}`;
+                        document.getElementById('event-time').textContent = `Hora: ${event.hora}`;
+                        document.getElementById('event-local').textContent = `Local: ${event.local}`;
 
-                        // Aqui você deve gerar o QR Code com a chave PIX e o valor total
-                        generateQRCode(`PIX_CHAVE|${totalPrice}`);
                     } else {
-                        console.error('Erro ao carregar evento:', data.error);
+                        alert('Erro ao carregar os dados do evento.');
                     }
                 })
                 .catch(error => {
                     console.error('Erro ao carregar evento:', error);
                 });
 
-            function generateQRCode(data) {
-                const qrCodeElement = document.getElementById('qr-code');
-                // Use uma uma biblioteca para gerar o código
-                const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(data)}&size=200x200`;
-                qrCodeElement.src = qrCodeUrl;
-            }
-        });
+            });
     </script>
 </body>
 </html>
