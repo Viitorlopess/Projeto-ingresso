@@ -15,7 +15,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 function updateSchema() {
     // Adicionar novas colunas à tabela eventos
     db.serialize(() => {
-        db.run(`ALTER TABLE eventos ADD COLUMN lote number`, (err) => {
+        db.run(`DELETE FROM eventos WHERE id = 92`, (err) => {
             if (err) {
                 console.error('Erro ao adicionar a coluna lote', err.message);
             } else {
